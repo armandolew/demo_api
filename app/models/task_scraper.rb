@@ -1,15 +1,22 @@
 require 'open-uri'
   class TaskScraper
 
-    def get_element(website)
+    ELEMENTS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
 
+    def get_element(website)
+      html_element = 'p'
       doc = open(website)
 
       site = Nokogiri::HTML.parse(doc)
       if site
-        element = site.at_css("h1").text
+        ELEMENTS.each do |element|
+          if site.css(element).count > 0
+            html_element = element
+          end
+        end
+        tag = site.at_css(html_element).text.to_s
       else
-        element = nil
+        tag = nil
       end
     end
 
