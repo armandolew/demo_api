@@ -9,6 +9,7 @@ class Task < ApplicationRecord
   belongs_to :user
 
   before_create :set_calculated_website
+  before_update :set_calculated_website, :if => :website_changed?
 
   def set_calculated_website
     self.calculated_website_header = TaskScraper.new.get_element(self.website)

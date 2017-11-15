@@ -1,24 +1,93 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+For installation
 
-* Ruby version
+* Install chrome driver:
 
-* System dependencies
+      sudo npm -g install chromedriver
 
-* Configuration
+* Bundle
 
-* Database creation
+* Run migrations
 
-* Database initialization
+* rails s
 
-* How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
+Examples:
 
-* Deployment instructions
+* User creation
 
-* ...
+   Open a rails console and type
+
+      $> User.create(email: "your-email", password: "your-password")
+
+   Copy your token for later use
+
+*  Api usage
+
+   Endpoints:
+
+        * http://localhost/tasks
+
+           Headers:
+
+               - Authorization     Token token=your-user-token
+
+            Method
+
+                - GET
+
+        * http://localhost/tasks
+
+            Headers:
+
+               - Authorization     Token token=your-user-token
+
+            Method
+
+                - POST
+
+             Params:
+
+                - task[description]
+                - task[website]
+
+
+        * http://localhost/tasks/:id
+
+           Headers:
+
+               - Authorization     Token token=your-user-token
+
+            Method
+
+                - GET
+
+        * http://localhost/tasks/:id
+
+           Headers:
+
+               - Authorization     Token token=your-user-token
+
+            Method
+
+                - PATCH/PUT
+
+             Params:
+
+                - task[description]
+                - task[website]
+                - task[status]
+
+
+        * http://localhost/tasks/:id
+
+           Headers:
+
+               - Authorization     Token token=your-user-token
+
+            Method
+
+                - DELETE
+
