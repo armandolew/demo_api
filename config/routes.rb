@@ -1,6 +1,34 @@
 Rails.application.routes.draw do
+
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :tasks, only: [:create, :show, :index, :update, :destroy]
+  jsonapi_resources :tasks, only: [:create, :show, :index, :update, :destroy] do
+    collection do
+      get 'search'
+    end
+  end
+
+  jsonapi_resource :users do
+    post 'registrations/sign_up', to: 'registrations#sign_up', as: 'sign_up'
+    get 'registrations/sign_in', to: 'registrations#sign_in', as: 'sign_in'
+  end
+
+
+
+  # Registrations, 
+  # Users con confirmación (boolean)
+  # data: {
+  #   type: {} 
+  # }
+  # Respetar el spec. End points normalizados.
+  # Contexto para resources.
+  # No se puede utilizar la gema act as list.
+  # concern.
+  # relaciones dentro del spec.
+  # busqueda con spec.
+  # confirmacion de correo para login.
+  # * imagen con base64.
+  # compartir tareas, enviar por correo con la tarea dentro del correo.
 
   get "*any", via: :all, to: "application#not_found"
 end

@@ -21,6 +21,8 @@ gem 'puma', '~> 3.7'
 gem 'bcrypt', '~> 3.1.7'
 gem 'will_paginate'
 gem 'watir'
+gem 'acts-as-taggable-on', :git => 'https://github.com/mbleigh/acts-as-taggable-on'
+gem 'jsonapi-resources'
 
 
 # Use Capistrano for deployment
@@ -45,6 +47,8 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'figaro'
   gem 'foreman'
+  gem 'better_errors'
+  gem 'letter_opener'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

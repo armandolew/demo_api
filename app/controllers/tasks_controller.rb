@@ -1,62 +1,28 @@
 class TasksController < ApplicationController
-
-  def index
-    tasks = user.tasks.order('created_at DESC').paginate(:per_page => 10, :page => params[:page])
-    render json: tasks.to_json, status: :ok
-  end
-
-  def show
-    task = user.tasks.find_by(id: params[:id])
-    render json: task.to_json, status: :ok
-  end
+  before_action :authenticate!
 
   def create
-    task = user.tasks.create(task_params)
-
-    if task.valid?
-      render json: request_response(status: 202, message: "Task created").to_json, status: :ok
-    else
-      render json: request_response(status: 422, message: "Unable to create task").to_json, status: :unprocessable_entity
-    end
+    task = current_user.tasks.create(task_params)
+    render json: render_element_json(task, TaskResource)
   end
 
   def update
-    if task
-      if task.update(task_update_params)
-        render json: request_response(status: 202, message: "Task updated").to_json, status: :ok
-      end
-    else
-      not_found
-    end
+    task.update_attributes(task_params)
+    render json: render_element_json(task, TaskResource)
   end
 
-  def destroy
-    if task
-      task.destroy
-      if task.destroyed?
-        render json: request_response(status: 202, message: "Task destroyed").to_json, status: :ok
-      end
-    else
-      not_found
-    end
+  def search
+  	tasks = current_user.tasks.tagged_with("#{params[:tags]}", wild: true, :any=> true)
+  	tasks_resources = tasks.map{ |task| TaskResource.new(task, self) }
+  	render json: JSONAPI::ResourceSerializer.new(TaskResource).serialize_to_hash(tasks_resources)
   end
 
   private
-
-    def user
-      @user ||= @current_user
-    end
-
     def task_params
-      params.require(:task).permit(:description, :website, :expiration_date)
-    end
-
-    def task_update_params
-      params.require(:task).permit(:description, :website, :expiration_date, :status)
+      params.require(:data).require(:attributes).permit(:description, :status, :tag_list, :website)
     end
 
     def task
-      @task ||= task = user.tasks.find_by(id: params[:id])
+      @task ||= current_user.tasks.find_by(id: params[:id])
     end
-
 end
