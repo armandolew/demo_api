@@ -1,3 +1,3 @@
 class UserResource < JSONAPI::Resource
-  attributes :email, :token, :active
+  attributes :email, :auth_token, :active
 end
