@@ -4,7 +4,7 @@ class RegistrationsController < ApplicationController
     user = User.create(email: params[:email], password: params[:password])
 
     if user.valid?
-      UserNotificationsMailer.sign_up_mailer(user).deliver
+      #UserNotificationsMailer.sign_up_mailer(user).deliver
       render json: render_element_json(user, UserResource)
     else
       render json: "#{user.errors}".to_json
