@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   jsonapi_resource :users do
     post 'registrations/sign_up', to: 'registrations#sign_up', as: 'sign_up'
     get 'registrations/sign_in', to: 'registrations#sign_in', as: 'sign_in'
+    get 'registrations/confirmation/:confirmation_token', to: 'registrations#confirmation', as: 'confirmation'
   end
 
 

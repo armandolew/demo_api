@@ -13,8 +13,10 @@ class Task < ApplicationRecord
 
   acts_as_taggable_on :tags
 
-  def set_calculated_website
-    self.calculated_website_header = TaskScraper.new.get_element(self.website)
-  end
+  private
+  
+    def set_calculated_website
+      self.calculated_website_header = TaskScraper.new.get_element(self.website)
+    end
 
 end

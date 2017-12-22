@@ -5,6 +5,13 @@ class TaskResource < JSONAPI::Resource
   	@model.tag_list
   end
 
+  def status
+    case @model.status
+      when false then "Open"
+      when true then "Done"
+    end
+  end
+
   def self.records(options={})
    options[:context][:api_user].tasks
   end
