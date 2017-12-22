@@ -1,7 +1,7 @@
 class RegistrationsController < ApplicationController
 
   def sign_up
-    user = User.create(email: params[:email], password: params[:password])
+    user = User.create(email: params[:data][:attributes][:email], password: params[:data][:attributes][:password])
 
     if user.valid?
       #UserNotificationsMailer.sign_up_mailer(user).deliver
@@ -12,9 +12,9 @@ class RegistrationsController < ApplicationController
   end
 
   def sign_in
-    user = User.find_by(email: params[:email])
+    user = User.find_by(email: params[:data][:attributes][:email])
     
-    if user && user.authenticate(params[:password]) 
+    if user && user.authenticate(params[:data][:attributes][:password]) 
       render json: render_element_json(user, UserResource)
     else
       render json: "Not found".to_json
