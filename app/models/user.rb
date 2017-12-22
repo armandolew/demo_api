@@ -15,7 +15,7 @@ class User < ApplicationRecord
   private
 
     def set_token
-      self.token = Digest::SHA1.hexdigest (self.email + self.password_digest)
+      self.auth_token = Digest::SHA1.hexdigest (self.email + self.password_digest)
     end
 
     def set_confirmation_token
