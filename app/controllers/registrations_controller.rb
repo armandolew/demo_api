@@ -4,7 +4,7 @@ class RegistrationsController < ApplicationController
     begin
       user = User.create(email: params[:data][:attributes][:email], password: params[:data][:attributes][:password])
       render json: render_element_json(user, UserResource)
-      UserNotificationsMailer.sign_up_mailer(user).deliver
+      #UserNotificationsMailer.sign_up_mailer(user).deliver
     rescue => e
       handle_exceptions(e)
     end
