@@ -46,5 +46,9 @@ class ApplicationController < ActionController::Base
     JSONAPI::ResourceSerializer.new(resource).serialize_to_hash(resource.new(element, self))
   end
 
+  def can_perform_action?
+    render_unauthorized("Access denied") unless authenticate! && current_user.active 
+  end
+
 
 end

@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :authenticate!
+  before_action :can_perform_action?
 
   def create
     return JSONAPI::Exceptions::ParameterMissing.new(:data) unless params[:data].present?
@@ -22,6 +22,7 @@ class TasksController < ApplicationController
   end
 
   def search
+    p can_perform_action?
   	tasks = current_user.tasks.tagged_with("#{params[:tags]}", wild: true, :any=> true)
   	tasks_resources = tasks.map{ |task| TaskResource.new(task, self) }
   	render json: JSONAPI::ResourceSerializer.new(TaskResource).serialize_to_hash(tasks_resources)
