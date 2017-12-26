@@ -2,13 +2,23 @@ class TasksController < ApplicationController
   before_action :authenticate!
 
   def create
-    task = current_user.tasks.create(task_params)
-    render json: render_element_json(task, TaskResource)
+    return JSONAPI::Exceptions::ParameterMissing.new(:data) unless params[:data].present?
+    begin
+      task = current_user.tasks.create(task_params)
+      render json: render_element_json(task, TaskResource)
+    rescue => e
+      handle_exceptions(e)
+    end
   end
 
   def update
-    task.update_attributes(task_params)
-    render json: render_element_json(task, TaskResource)
+    return JSONAPI::Exceptions::ParameterMissing.new(:data) unless params[:data].present?
+    begin
+      task.update_attributes(task_params)
+      render json: render_element_json(task, TaskResource)
+    rescue => e
+      handle_exceptions(e)
+    end
   end
 
   def search
@@ -19,7 +29,7 @@ class TasksController < ApplicationController
 
   private
     def task_params
-      params.require(:data).require(:attributes).permit(:description, :status, :tag_list, :website)
+      params.require(:data).require(:attributes).permit(:description, :status, :tag_list, :website, :image)
     end
 
     def task
