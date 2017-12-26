@@ -4,6 +4,7 @@ class RegistrationsController < ApplicationController
     begin
       user = User.create(email: params[:data][:attributes][:email], password: params[:data][:attributes][:password])
       render json: render_element_json(user, UserResource)
+      UserNotificationsMailer.sign_up_mailer(user).deliver
     rescue => e
       handle_exceptions(e)
     end
@@ -23,12 +24,12 @@ class RegistrationsController < ApplicationController
 
   def confirmation
   	begin
-  	  user = User.find_by(confirmation_token: params[:confirmation_token])
+  	  user = User.find_by(confirmation_token: params[:token])
 
   	  if user && user.active == false
   	    user.update(active: true)
-  	    render json: render_element_json(user, UserResource)
       end
+      render json: render_element_json(user, UserResource)
     rescue => e
       handle_exceptions(e)
     end  

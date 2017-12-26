@@ -19,7 +19,7 @@ class User < ApplicationRecord
     end
 
     def set_confirmation_token
-  	  self.confirmation_token = Digest::SHA1.hexdigest (self.email + Time.zone.now.to_s)
+  	  self.confirmation_token = Digest::SHA1.hexdigest (self.email + Time.zone.now.to_s + SecureRandom.hex(5))
     end
 
 end

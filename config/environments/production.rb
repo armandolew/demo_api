@@ -72,12 +72,12 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  config.action_mailer.default_url_options = { :host => "http://localhost:3000" }
+  config.action_mailer.default_url_options = { :host => "https://demo-api-v1.herokuapp.com" }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
   :address              => "smtp.gmail.com",
   :port                 => 587,
-  :domain               => 'http://localhost:3000',
+  :domain               => 'https://demo-api-v1.herokuapp.com',
   :user_name            => 'armando.lew@sonatasmx.com',
   :password             => 'lewtam16',
   :authentication       => 'plain',

@@ -8,11 +8,22 @@ Rails.application.routes.draw do
     end
   end
 
+
+  resource :registrations, only: [:sign_in, :sign_up, :confirmation] do
+    collection do
+      post '/sign_up', to: 'registrations#sign_up', as: 'sign_up'
+      get  '/sign_in', to: 'registrations#sign_in', as: 'sign_in'
+      get  '/confirmation/:token', to: 'registrations#confirmation', as: 'confirmation'
+    end
+  end
+
+=begin
   jsonapi_resource :users do
     post 'registrations/sign_up', to: 'registrations#sign_up', as: 'sign_up'
     get 'registrations/sign_in', to: 'registrations#sign_in', as: 'sign_in'
-    get 'registrations/confirmation/:confirmation_token', to: 'registrations#confirmation', as: 'confirmation'
+    get 'registrations/confirmation/:token', to: 'registrations#confirmation', as: 'registration_confirmation'
   end
+=end
 
 
 

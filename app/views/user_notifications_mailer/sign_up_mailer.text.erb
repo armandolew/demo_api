@@ -2,6 +2,7 @@ Welcome to the demo_api system.
 
   Please click the following link in order to activate your account:
 
-    <%= confirmation_users_url(confirmation_token: @user.confirmation_token) %>
+    <a href="/registrations/confirmation/<%=@user.confirmation_token%>"> Account </a>
+
 
 Regards.
