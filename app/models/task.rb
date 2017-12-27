@@ -43,15 +43,12 @@ class Task < ApplicationRecord
 
   def place_at(new_position)
     lower_tasks        = self.user.tasks.where("task_position >= ? AND task_position < ?", new_position, self.task_position)
-    
-    self.update(task_position: 0)
-
     if lower_tasks.count > 0
+      self.update(task_position: 0)
       lower_tasks.map do |task|
         task.update(task_position: task.task_position + 1)
       end
     end
-
     self.update(task_position: new_position)
   end
 
