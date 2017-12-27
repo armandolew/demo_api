@@ -31,7 +31,7 @@ class Task < ApplicationRecord
   end
 
   def move_down
-    lower_task         = self.user.tasks.where("task_position > ?", self.task_position).last
+    lower_task         = self.user.tasks.where("task_position > ?", self.task_position).first
     if lower_task
       current_task_position = self.task_position
       lower_task_position = lower_task.task_position
