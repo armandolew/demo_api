@@ -1,5 +1,5 @@
 class TaskResource < JSONAPI::Resource
-  attributes :description, :status, :calculated_website_header, :created_at, :website,  :tags
+  attributes :description, :status, :calculated_website_header, :created_at, :website, :task_position, :tags
 
   def tags
   	@model.tag_list

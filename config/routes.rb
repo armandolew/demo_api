@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   jsonapi_resources :tasks, only: [:create, :show, :index, :update, :destroy] do
     collection do
       get 'search'
+      get '/:id/move/', to: 'tasks#move'
     end
   end
 

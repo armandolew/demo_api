@@ -22,10 +22,21 @@ class TasksController < ApplicationController
   end
 
   def search
-    p can_perform_action?
   	tasks = current_user.tasks.tagged_with("#{params[:tags]}", wild: true, :any=> true)
   	tasks_resources = tasks.map{ |task| TaskResource.new(task, self) }
   	render json: JSONAPI::ResourceSerializer.new(TaskResource).serialize_to_hash(tasks_resources)
+  end
+
+  def move
+    return JSONAPI::Exceptions::ParameterMissing.new(:action) unless params[:option].present? 
+    
+    case params[:option]
+      when 'up' then task.move_up
+      when 'down' then task.move_down
+      when 'place' then task.place_at(params[:position].to_i) if params[:position].present?
+    end
+
+    render json: render_element_json(task, TaskResource)
   end
 
   private
