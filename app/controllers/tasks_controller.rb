@@ -2,7 +2,6 @@ class TasksController < ApplicationController
   before_action :can_perform_action?
 
   def create
-    return JSONAPI::Exceptions::ParameterMissing.new(:data) unless params[:data].present?
     begin
       task = current_user.tasks.create(task_params)
       render json: render_element_json(task, TaskResource)
@@ -12,7 +11,6 @@ class TasksController < ApplicationController
   end
 
   def update
-    return JSONAPI::Exceptions::ParameterMissing.new(:data) unless params[:data].present?
     begin
       task.update_attributes(task_params)
       render json: render_element_json(task, TaskResource)
@@ -28,8 +26,6 @@ class TasksController < ApplicationController
   end
 
   def move
-    return JSONAPI::Exceptions::ParameterMissing.new(:action) unless params[:option].present? 
-    
     case params[:option]
       when 'up' then task.move_up
       when 'down' then task.move_down

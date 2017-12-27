@@ -30,8 +30,10 @@ class RegistrationsController < ApplicationController
   	  if @user && @user.active == false
   	    @user.update(active: true)
       end
-      respond_to :html, :json
-      #render json: render_element_json(user, UserResource)
+      respond_to do |format|
+        format.html
+        format.json { render json: render_element_json(@user, UserResource) }
+      end
     rescue => e
       handle_exceptions(e)
     end  
