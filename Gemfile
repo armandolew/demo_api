@@ -19,7 +19,6 @@ gem 'puma', '~> 3.7'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
-gem 'will_paginate'
 gem 'acts-as-taggable-on', :git => 'https://github.com/mbleigh/acts-as-taggable-on'
 gem 'jsonapi-resources'
 
@@ -48,6 +47,7 @@ group :development do
   gem 'figaro'
   gem 'foreman'
   gem 'better_errors'
+  gem 'pry-byebug'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

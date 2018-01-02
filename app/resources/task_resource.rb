@@ -1,9 +1,14 @@
 class TaskResource < JSONAPI::Resource
-  attributes :description, :status, :calculated_website_header, :created_at, :website, :task_position, :tags
+  attributes :description, :status, :calculated_website_header, :user_id, :created_at, :website, :task_position
 
-  def tags
-  	@model.tag_list
+  has_one :user
+  has_many :task_labels, acts_as_set: true
+
+=begin
+  before_save do
+    @model.user_id = context[:user].id if @model.new_record?
   end
+=end
 
   def status
     case @model.status
@@ -13,7 +18,6 @@ class TaskResource < JSONAPI::Resource
   end
 
   def self.records(options={})
-   options[:context][:api_user].tasks
+   options[:context][:user].tasks
   end
-
 end

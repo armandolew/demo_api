@@ -1,42 +1,34 @@
 class RegistrationsController < ApplicationController
-
   def sign_up
-    begin
-      user = User.create(email: params[:data][:attributes][:email], password: params[:data][:attributes][:password])
-      #UserNotificationsMailer.sign_up_mailer(user).deliver
+    return error_response(400, "EMAIL") unless complete_params?(user_sign_params, "email")
+    return error_response(400, "PASWWORD") unless complete_params?(user_sign_params, "password")
 
-      render json: render_element_json(user, UserResource)
-    rescue => e
-      handle_exceptions(e)
-    end
+    email    = user_sign_params[:email]
+    password = user_sign_params[:password]
+
+    User.create!(email: email, password: password)
+    head :created
   end
 
   def sign_in
-  	begin
-      user = User.find_by(email: params[:data][:attributes][:email])
+    return error_response(400, "EMAIL") unless complete_params?(user_sign_params, "email")
+    return error_response(400, "PASWWORD") unless complete_params?(user_sign_params, "password")
+    return error_response(400, "BAD EMAIL/PASSWORD") unless user = User.find_by(email: user_sign_params[:email])
+    return error_response(400, "BAD EMAIL/PASSWORD") unless user.authenticate(user_sign_params[:password]) 
     
-      if user && user.authenticate(params[:data][:attributes][:password]) 
-        render json: render_element_json(user, UserResource)
-      end
-    rescue => e
-      handle_exceptions(e)
-    end    
+    render json: { data: { attributes: { token: user.auth_token } } }.to_json, status: 200
   end
 
   def confirmation
-  	begin
-  	  @user = User.find_by(confirmation_token: params[:token])
-
-  	  if @user && @user.active == false
-  	    @user.update(active: true)
-      end
-      respond_to do |format|
-        format.html
-        format.json { render json: render_element_json(@user, UserResource) }
-      end
-    rescue => e
-      handle_exceptions(e)
-    end  
+    return error_response(400, "TOKEN") unless complete_params?(user_sign_params, "token")
+    return error_response(400, "BAD TOKEN") unless @user = User.find_by(confirmation_token: user_sign_params[:token])
+ 
+    @user.update!(active: true)
+    head :ok
   end
 
+  private
+    def user_sign_params
+      params.require(:data).require(:attributes).permit(:email, :password, :token)
+    end
 end

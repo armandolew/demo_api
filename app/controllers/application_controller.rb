@@ -1,15 +1,25 @@
 class ApplicationController < ActionController::Base
-
-  helper_method :current_user
-
   include JSONAPI::ActsAsResourceController
 
-  def authenticate!
-    authenticate_token || render_unauthorized("Access denied")
+  rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
+    error_response(400, parameter_missing_exception.param)
   end
 
+  rescue_from(ActiveRecord::RecordInvalid) do |invalid|
+    error_response(422, invalid.record.errors)
+  end
+=begin
+  rescue_from Exception do |exception|
+    error_response(422)
+  end
+=end
+  
+  # NOTE: DRY, we can handle global exceptions
+  # rescue_from do |exception|
+  #   handle_exceptions(e)
+  # end
   def render_unauthorized(message)
-    render json: message.to_json, status: :unauthorized
+    head :unauthorized
   end
 
   def authenticate_token
@@ -19,36 +29,26 @@ class ApplicationController < ActionController::Base
   end
 
   def not_found
-    render json: "Not found".to_json, status: 404
+    head 404
   end
 
   def current_user
     @current_user ||= authenticate_token
   end
 
-  def request_response(status:, message:)
-    response = {
-      status: status,
-      message: message
-    }
-  end
-
-  def meta
-    { date: "#{Time.now.year}" }
-  end
-
   def context
-    # @user assigned in #authorize!()
-    { api_user: current_user }
+    {user: current_user}
   end
 
-  def render_element_json(element, resource)
-    JSONAPI::ResourceSerializer.new(resource).serialize_to_hash(resource.new(element, self))
+  def complete_params?(params, param)
+    params.has_key?(param) && !params[param].blank?
+  end
+
+  def error_response(code, message)
+    render json: { errors: { code: code, detail: message } }, status: code
   end
 
   def can_perform_action?
-    render_unauthorized("Access denied") unless authenticate! && current_user.active 
+    render_unauthorized("Access denied") unless (authenticate_token && current_user && current_user.active) 
   end
-
-
 end
